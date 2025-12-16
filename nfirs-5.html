@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFIRS-5 Fire Service Casualty</title>
+
+    <link rel="icon" type="image/png" href="https://i.imgur.com/niSY7Na.png">
+    <link rel="shortcut icon" type="image/png" href="https://i.imgur.com/niSY7Na.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            letter-spacing: -0.01em;
+            background-color: #1a1d21;
+            margin: 0;
+            display: flex;
+        }
+        .sidebar {
+            width: 280px;
+            background: #2A2E33;
+            min-height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            border-right: 2px solid #3f444a;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 2px solid #3f444a;
+            background: #1f2327;
+        }
+        .sidebar-logo {
+            width: 100%;
+            height: auto;
+            margin-bottom: 16px;
+            opacity: 0.9;
+        }
+        .sidebar-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #e5e7eb;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .menu-section {
+            padding: 20px 16px;
+        }
+        .menu-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 12px;
+            padding-left: 8px;
+        }
+        .menu-item {
+            display: block;
+            padding: 12px 16px;
+            color: #d1d5db;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-bottom: 4px;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            border: 1px solid transparent;
+        }
+        .menu-item:hover {
+            background: #1f2327;
+            border-color: #991b1b;
+            color: #f3f4f6;
+            transform: translateX(4px);
+        }
+        .menu-item.active {
+            background: #991b1b;
+            color: #ffffff;
+            font-weight: 600;
+        }
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 48px 32px;
+            width: calc(100% - 280px);
+        }
+        .btn-primary {
+            background: #309325;
+            transition: all 0.15s ease;
+        }
+        .btn-primary:hover {
+            background: #144c1b;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+        }
+        .document-container {
+            background: #2A2E33;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        .section-title {
+            background: #1a1a1a;
+            color: #ffffff;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .field-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #e5e7eb;
+        }
+        .form-input {
+            border: 1px solid #3f444a;
+            background: #1f2327;
+            transition: all 0.15s ease;
+            color: #e5e7eb;
+            overflow: visible;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+        input.form-input {
+            min-height: 38px;
+            height: auto;
+        }
+        .form-input:focus {
+            background: #252a2f;
+            border-color: #991b1b;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(153, 27, 27, 0.05);
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: all 0.15s ease;
+        }
+        .checkbox-label:hover {
+            background: #252a2f;
+        }
+        .checkbox-input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .text-gray-900 { color: #f3f4f6 !important; }
+        .text-gray-600 { color: #d1d5db !important; }
+        .text-gray-800 { color: #e5e7eb !important; }
+        .text-gray-700 { color: #d1d5db !important; }
+        .border-gray-200 { border-color: #3f444a !important; }
+        .border-gray-300 { border-color: #3f444a !important; }
+        .bg-gray-50 { background-color: #1f2327 !important; }
+        .bg-white { background-color: #1f2327 !important; }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body style="background-color: #1a1d21;">
+    
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="https://i.imgur.com/ngOEnwW.png" alt="LSFD" class="sidebar-logo">
+            <div class="sidebar-title">Rapor Sistemi</div>
+        </div>
+        
+        <div class="menu-section">
+            <div class="menu-section-title">Ana Menü</div>
+            <a href="index.html" class="menu-item">← Ana Sayfa</a>
+        </div>
+
+        <div class="menu-section">
+            <div class="menu-section-title">NFIRS Raporları</div>
+            <a href="nfirs-1.html" class="menu-item">NFIRS-1 Basic Module</a>
+            <a href="nfirs-3.html" class="menu-item">NFIRS-3 Structure Fire</a>
+            <a href="nfirs-4.html" class="menu-item">NFIRS-4 Civilian Casualty</a>
+            <a href="nfirs-5.html" class="menu-item active">NFIRS-5 Fire Service Casualty</a>
+        </div>
+
+        <div class="menu-section">
+            <div class="menu-section-title">EMS Raporları</div>
+            <a href="pcr.html" class="menu-item">Patient Care Report</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="max-w-4xl mx-auto">
+
+            <!-- Header -->
+            <div class="document-container rounded mb-1">
+                <div class="text-center py-10 px-8">
+                    <h1 class="text-xl font-semibold text-gray-900 tracking-tight">NATIONAL FIRE INCIDENT REPORTING SYSTEM</h1>
+                    <h2 class="text-base text-gray-600 mt-1 font-medium">NFIRS-5 Fire Service Casualty</h2>
+                </div>
+            </div>
+
+            <!-- Firefighter Information -->
+            <div class="document-container rounded mb-1 p-8">
+                <div class="grid grid-cols-3 gap-6">
+                    <div>
+                        <label class="field-label block mb-2">İTFAİYECİNİN ADI</label>
+                        <input type="text" id="itfaiyeciAdi" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="field-label block mb-2">RÜTBESİ</label>
+                        <input type="text" id="rutbe" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="field-label block mb-3">CİNSİYETİ</label>
+                        <div class="space-y-2">
+                            <label class="checkbox-label">
+                                <input type="radio" name="cinsiyet" value="kadin" class="checkbox-input">
+                                <span class="text-sm text-gray-700">Kadın</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="cinsiyet" value="erkek" class="checkbox-input">
+                                <span class="text-sm text-gray-700">Erkek</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Injury Details -->
+            <div class="document-container rounded mb-1 p-8">
+                <div class="grid grid-cols-4 gap-6">
+                    <div>
+                        <label class="field-label block mb-3">YARALANMA CİDDİYETİ</label>
+                        <div class="space-y-2">
+                            <label class="checkbox-label">
+                                <input type="radio" name="ciddiyet" value="hafif" class="checkbox-input">
+                                <span class="text-sm text-gray-700">Hafif</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="ciddiyet" value="orta" class="checkbox-input">
+                                <span class="text-sm text-gray-700">Orta</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="ciddiyet" value="ciddi" class="checkbox-input">
+                                <span class="text-sm text-gray-700">Ciddi</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="ciddiyet" value="olu" class="checkbox-input">
+                                <span class="text-sm text-gray-700">Ölü</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="field-label block mb-2">YARALANMA TÜRÜ</label>
+                        <input type="text" id="yaralanmaTuru" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="field-label block mb-3">ETKİLENEN VÜCUT BÖLGESİ</label>
+                        <div class="space-y-2">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="vucutBolgesi" value="bas" class="checkbox-input">
+                                <span class="text-sm text-gray-700">Baş</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="vucutBolgesi" value="govde" class="checkbox-input">
+                                <span class="text-sm text-gray-700">Gövde</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="vucutBolgesi" value="kollar-bacaklar" class="checkbox-input">
+                                <span class="text-sm text-gray-700">Kollar ve Bacaklar</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="vucutBolgesi" value="coklu" class="checkbox-input">
+                                <span class="text-sm text-gray-700">Çoklu</span>
+                            </label>
+                        </div>
+                        <div class="mt-3">
+                            <label class="text-xs text-gray-700 block mb-1">Diğer:</label>
+                            <input type="text" id="vucutBolgesiDiger" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="field-label block mb-2">YARALANMA NEDENİ</label>
+                        <input type="text" id="yaralanmaNedeni" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity and Assignment -->
+            <div class="document-container rounded mb-1 p-8">
+                <div class="grid grid-cols-3 gap-6">
+                    <div>
+                        <label class="field-label block mb-2">YARALANMA SIRASINDA YAPILAN SPESİFİK EYLEM</label>
+                        <input type="text" id="spesifikEylem" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="field-label block mb-2">GÖREVLENDİRME</label>
+                        <input type="text" id="gorevlendirme" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="field-label block mb-2">OLAY YERİNDEKİ KONUMU</label>
+                        <input type="text" id="konum" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                </div>
+            </div>
+
+            <!-- PPE and Equipment -->
+            <div class="document-container rounded mb-1 p-8">
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="field-label block mb-3">KİŞİSEL KORUYUCU EKİPMAN GİYDİ Mİ?</label>
+                        <div class="space-y-2">
+                            <label class="checkbox-label">
+                                <input type="radio" name="kkePPE" value="evet" class="checkbox-input">
+                                <span class="text-sm text-gray-700">Evet</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="kkePPE" value="hayir" class="checkbox-input">
+                                <span class="text-sm text-gray-700">Hayır</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="field-label block mb-3">EKİPMAN PERFORMANSI</label>
+                        <div class="space-y-2">
+                            <label class="checkbox-label">
+                                <input type="radio" name="ekipmanPerformans" value="duzgun" class="checkbox-input">
+                                <span class="text-sm text-gray-700">Düzgün Çalıştı</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="ekipmanPerformans" value="arizali" class="checkbox-input">
+                                <span class="text-sm text-gray-700">Arızalandı</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="ekipmanPerformans" value="gecersiz" class="checkbox-input">
+                                <span class="text-sm text-gray-700">Geçerli Değil</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Treatment and Transport -->
+            <div class="document-container rounded mb-1 p-8">
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="field-label block mb-2">SAĞLANAN TEDAVİ</label>
+                        <input type="text" id="tedavi" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="field-label block mb-2">NAKLEDİLEN SAĞLIK KURUMU</label>
+                        <input type="text" id="saglikKurumu" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Incident Narrative -->
+            <div class="document-container rounded mb-1 p-8">
+                <label class="field-label block mb-3">OLAY ANLATISI VE EK BİLGİLENDİRMELER</label>
+                <textarea id="olayAnlatisi" class="form-input w-full px-3 py-2.5 rounded text-sm" rows="5" placeholder="Olay anlatısı..."></textarea>
+            </div>
+
+            <!-- Signatures -->
+            <div class="document-container rounded mb-6 p-8">
+                <div class="grid grid-cols-3 gap-6">
+                    <div>
+                        <label class="field-label block mb-2">OLAY KOMUTANI</label>
+                        <input type="text" id="olayKomutani" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="field-label block mb-2">FORMU DOLDURAN</label>
+                        <input type="text" id="formuDolduran" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="field-label block mb-2">FORM TARİHİ</label>
+                        <input type="text" id="formTarihi" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generate Button -->
+            <button onclick="generateBBCode()" class="btn-primary w-full text-white font-semibold py-4 rounded text-sm uppercase tracking-wide">
+                BBCode Oluştur
+            </button>
+
+            <!-- Output -->
+            <div id="outputContainer" class="hidden mt-6 document-container rounded p-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-base font-semibold text-gray-900 uppercase tracking-wide">BBCode Çıktısı</h3>
+                    <button onclick="copyToClipboard()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-5 py-2.5 rounded font-medium uppercase tracking-wide transition-all">
+                        <span id="copyText">Kopyala</span>
+                    </button>
+                </div>
+                <textarea id="output" readonly class="w-full h-96 px-4 py-3 border border-gray-300 rounded bg-gray-50 font-mono text-xs leading-relaxed"></textarea>
+            </div>
+
+            <!-- Copyright -->
+            <div class="text-center mt-8 py-4">
+                <p class="text-xs text-gray-600 opacity-50">© 2025 evcleia - GTA-W:TR, Los Santos Fire Department oluşumunun kullanımı için tasarlanmıştır, tamamen IC amaçlar doğrultusunda kullanılmalıdır.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getCheckbox(name, value) {
+            const selected = document.querySelector(`input[name="${name}"]:checked`);
+            return selected && selected.value === value ? '[cbC]' : '[cb]';
+        }
+
+        function getMultiCheckbox(name) {
+            const checkboxes = document.querySelectorAll(`input[name="${name}"]:checked`);
+            const values = Array.from(checkboxes).map(cb => {
+                let label = '';
+                if (cb.value === 'bas') label = 'Baş';
+                else if (cb.value === 'govde') label = 'Gövde';
+                else if (cb.value === 'kollar-bacaklar') label = 'Kollar ve Bacaklar';
+                else if (cb.value === 'coklu') label = 'Çoklu';
+                return label;
+            });
+            
+            const allOptions = ['Baş', 'Gövde', 'Kollar ve Bacaklar', 'Çoklu'];
+            return allOptions.map(opt => {
+                const checked = values.includes(opt);
+                return `${checked ? '[cbC]' : '[cb]'} ${opt}`;
+            }).join(' / ');
+        }
+
+        function generateBBCode() {
+            const itfaiyeciAdi = document.getElementById('itfaiyeciAdi').value;
+            const rutbe = document.getElementById('rutbe').value;
+            const yaralanmaTuru = document.getElementById('yaralanmaTuru').value;
+            const vucutBolgesiDiger = document.getElementById('vucutBolgesiDiger').value;
+            const yaralanmaNedeni = document.getElementById('yaralanmaNedeni').value;
+            const spesifikEylem = document.getElementById('spesifikEylem').value;
+            const gorevlendirme = document.getElementById('gorevlendirme').value;
+            const konum = document.getElementById('konum').value;
+            const tedavi = document.getElementById('tedavi').value;
+            const saglikKurumu = document.getElementById('saglikKurumu').value;
+            const olayAnlatisi = document.getElementById('olayAnlatisi').value;
+            const olayKomutani = document.getElementById('olayKomutani').value;
+            const formuDolduran = document.getElementById('formuDolduran').value;
+            const formTarihi = document.getElementById('formTarihi').value;
+
+            const vucutBolgesi = getMultiCheckbox('vucutBolgesi');
+            const digerText = vucutBolgesiDiger ? ` / [cb] Diğer: [size=85] ${vucutBolgesiDiger} [/size]` : '';
+
+            const bbcode = `[center][size=125]UNITED STATES FIRE ADMINISTRATION
+[b]NATIONAL FIRE INCIDENT REPORTING SYSTEM (NFIRS-5 FIRE SERVICE CASUALTY)[/b][/size][/center]
+
+[table=#d0dade,white][tr]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]İTFAİYECİNİN ADI[/b]
+${itfaiyeciAdi}[/indent][/size][/tdwidth]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]RÜTBESİ[/b]
+${rutbe}[/indent][/size][/tdwidth]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]CİNSİYETİ[/b]
+${getCheckbox('cinsiyet', 'kadin')} Kadın / ${getCheckbox('cinsiyet', 'erkek')} Erkek[/indent][/size][/tdwidth][/table]
+
+[table=#d0dade,white][tr]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]YARALANMA CİDDİYETİ[/b]
+${getCheckbox('ciddiyet', 'hafif')} Hafif / ${getCheckbox('ciddiyet', 'orta')} Orta / ${getCheckbox('ciddiyet', 'ciddi')} Ciddi / ${getCheckbox('ciddiyet', 'olu')} Ölü[/indent][/size][/tdwidth]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]YARALANMA TÜRÜ[/b]
+${yaralanmaTuru}[/indent][/size][/tdwidth]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]ETKİLENEN VÜCUT BÖLGESİ[/b]
+${vucutBolgesi}${digerText}[/indent][/size][/tdwidth]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]YARALANMA NEDENİ[/b]
+${yaralanmaNedeni}[/indent][/size][/tdwidth][/table]
+
+[table=#d0dade,white][tr]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]YARALANMA SIRASINDA YAPILAN SPESİFİK EYLEM[/b]
+${spesifikEylem}[/indent][/size][/tdwidth]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]GÖREVLENDİRME[/b]
+${gorevlendirme}[/indent][/size][/tdwidth]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]OLAY YERİNDEKİ KONUMU[/b]
+${konum}[/indent][/size][/tdwidth][/table]
+
+[table=#d0dade,white][tr]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]KİŞİSEL KORUYUCU EKİPMAN GİYDİ Mİ?[/b]
+${getCheckbox('kkePPE', 'evet')} Evet / ${getCheckbox('kkePPE', 'hayir')} Hayır[/indent][/size][/tdwidth]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]EKİPMAN PERFORMANSI[/b]
+${getCheckbox('ekipmanPerformans', 'duzgun')} Düzgün Çalıştı / ${getCheckbox('ekipmanPerformans', 'arizali')} Arızalandı / ${getCheckbox('ekipmanPerformans', 'gecersiz')} Geçerli Değil.[/indent][/size][/tdwidth][/table]
+
+[table=#d0dade,white][tr]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]SAĞLANAN TEDAVİ[/b]
+${tedavi}[/indent][/size][/tdwidth]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]NAKLEDİLEN SAĞLIK KURUMU[/b]
+${saglikKurumu}[/indent][/size][/tdwidth][/table]
+
+[table=#d0dade,white][tr]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]OLAY ANLATISI VE EK BİLGİLENDİRMELER[/b]
+${olayAnlatisi}[/indent][/size][/tdwidth][/table]
+
+[table=#d0dade,white][tr]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]OLAY KOMUTANI[/b]
+${olayKomutani}[/indent][/size][/tdwidth]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]FORMU DOLDURAN[/b]
+${formuDolduran}[/indent][/size][/tdwidth]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]FORM TARİHİ[/b]
+${formTarihi}[/indent][/size][/tdwidth]`;
+
+            document.getElementById('output').value = bbcode;
+            document.getElementById('outputContainer').classList.remove('hidden');
+            document.getElementById('outputContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function copyToClipboard() {
+            const output = document.getElementById('output');
+            output.select();
+            document.execCommand('copy');
+            
+            const copyText = document.getElementById('copyText');
+            copyText.textContent = 'Kopyalama Başarılı';
+            setTimeout(() => {
+                copyText.textContent = 'Kopyala';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFIRS-1 Basic Module</title>
+
+    <link rel="icon" type="image/png" href="https://i.imgur.com/niSY7Na.png">
+    <link rel="shortcut icon" type="image/png" href="https://i.imgur.com/niSY7Na.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            letter-spacing: -0.01em;
+            background-color: #1a1d21;
+            margin: 0;
+            display: flex;
+        }
+        .sidebar {
+            width: 280px;
+            background: #2A2E33;
+            min-height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            border-right: 2px solid #3f444a;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 2px solid #3f444a;
+            background: #1f2327;
+        }
+        .sidebar-logo {
+            width: 100%;
+            height: auto;
+            margin-bottom: 16px;
+            opacity: 0.9;
+        }
+        .sidebar-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #e5e7eb;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .menu-section {
+            padding: 20px 16px;
+        }
+        .menu-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 12px;
+            padding-left: 8px;
+        }
+        .menu-item {
+            display: block;
+            padding: 12px 16px;
+            color: #d1d5db;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-bottom: 4px;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            border: 1px solid transparent;
+        }
+        .menu-item:hover {
+            background: #1f2327;
+            border-color: #991b1b;
+            color: #f3f4f6;
+            transform: translateX(4px);
+        }
+        .menu-item.active {
+            background: #991b1b;
+            color: #ffffff;
+            font-weight: 600;
+        }
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 48px 32px;
+            width: calc(100% - 280px);
+        }
+        .btn-primary {
+            background: #309325;
+            transition: all 0.15s ease;
+        }
+        .btn-primary:hover {
+            background: #144c1b;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+        }
+        .document-container {
+            background: #2A2E33;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        .section-title {
+            background: #1a1a1a;
+            color: #ffffff;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .field-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #e5e7eb;
+        }
+        .form-input {
+            border: 1px solid #3f444a;
+            background: #1f2327;
+            transition: all 0.15s ease;
+            color: #e5e7eb;
+            overflow: visible;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+        input.form-input {
+            min-height: 38px;
+            height: auto;
+        }
+        .form-input:focus {
+            background: #252a2f;
+            border-color: #991b1b;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(153, 27, 27, 0.05);
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: all 0.15s ease;
+        }
+        .checkbox-label:hover {
+            background: #252a2f;
+        }
+        .checkbox-input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .text-gray-900 { color: #f3f4f6 !important; }
+        .text-gray-600 { color: #d1d5db !important; }
+        .text-gray-800 { color: #e5e7eb !important; }
+        .text-gray-700 { color: #d1d5db !important; }
+        .border-gray-200 { border-color: #3f444a !important; }
+        .border-gray-300 { border-color: #3f444a !important; }
+        .bg-gray-50 { background-color: #1f2327 !important; }
+        .bg-white { background-color: #1f2327 !important; }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="https://i.imgur.com/ngOEnwW.png" alt="LSFD" class="sidebar-logo">
+            <div class="sidebar-title">Rapor Sistemi</div>
+        </div>
+        
+        <div class="menu-section">
+            <div class="menu-section-title">Ana Menü</div>
+            <a href="index.html" class="menu-item">← Ana Sayfa</a>
+        </div>
+
+        <div class="menu-section">
+            <div class="menu-section-title">NFIRS Raporları</div>
+            <a href="nfirs-1.html" class="menu-item active">NFIRS-1 Basic Module</a>
+            <a href="nfirs-3.html" class="menu-item">NFIRS-3 Structure Fire</a>
+            <a href="nfirs-4.html" class="menu-item">NFIRS-4 Civilian Casualty</a>
+            <a href="nfirs-5.html" class="menu-item">NFIRS-5 Fire Service Casualty</a>
+        </div>
+
+        <div class="menu-section">
+            <div class="menu-section-title">EMS Raporları</div>
+            <a href="pcr.html" class="menu-item">Patient Care Report</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="max-w-4xl mx-auto">
+
+            <!-- Header -->
+            <div class="document-container rounded mb-1">
+                <div class="text-center py-10 px-8">
+                    <h1 class="text-xl font-semibold text-gray-900 tracking-tight">NATIONAL FIRE INCIDENT REPORTING SYSTEM</h1>
+                    <h2 class="text-base text-gray-600 mt-1 font-medium">NFIRS-1 Basic Module</h2>
+                </div>
+            </div>
+
+            <!-- Basic Information -->
+            <div class="document-container rounded mb-1 p-8">
+                <div class="grid grid-cols-4 gap-x-6 gap-y-5">
+                    <div>
+                        <label class="field-label block mb-2">FDID</label>
+                        <input type="text" id="fdid" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="field-label block mb-2">EYALET</label>
+                        <input type="text" id="eyalet" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="field-label block mb-2">OLAY TARİHİ</label>
+                        <input type="text" id="olayTarihi" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="field-label block mb-2">OLAY NUMARASI</label>
+                        <input type="text" id="olayNumarasi" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Address and Incident Type -->
+            <div class="document-container rounded mb-1 p-8">
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="field-label block mb-2">ADRES</label>
+                        <input type="text" id="adres" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="field-label block mb-2">OLAY TÜRÜ</label>
+                        <input type="text" id="olayTuru" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Units and Times -->
+            <div class="document-container rounded mb-1 p-8">
+                <div class="grid grid-cols-4 gap-6">
+                    <div>
+                        <label class="field-label block mb-2">YÖNELEN BİRİMLER</label>
+                        <input type="text" id="yonelenBirimler" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="field-label block mb-2">GÖNDERİM ZAMANI</label>
+                        <input type="text" id="gonderimZamani" class="form-input w-full px-3 py-2.5 rounded text-sm" placeholder="23/10/2024 - 03:37 PM">
+                    </div>
+                    <div>
+                        <label class="field-label block mb-2">VARIŞ ZAMANI</label>
+                        <input type="text" id="varisZamani" class="form-input w-full px-3 py-2.5 rounded text-sm" placeholder="23/10/2024 - 03:40 PM">
+                    </div>
+                    <div>
+                        <label class="field-label block mb-2">SONLANIŞ ZAMANI</label>
+                        <input type="text" id="sonlanisZamani" class="form-input w-full px-3 py-2.5 rounded text-sm" placeholder="23/10/2024 - 04:15 PM">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions and Detector -->
+            <div class="document-container rounded mb-1 p-8">
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="field-label block mb-3">ALINAN AKSİYONLAR</label>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="text-xs text-gray-700 block mb-1">(1)</label>
+                                <input type="text" id="aksiyon1" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                            </div>
+                            <div>
+                                <label class="text-xs text-gray-700 block mb-1">(2)</label>
+                                <input type="text" id="aksiyon2" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="field-label block mb-3">DEDEKTÖR</label>
+                        <div class="space-y-2">
+                            <label class="checkbox-label">
+                                <input type="radio" name="dedektor" value="uyardi" class="checkbox-input">
+                                <span class="text-sm text-gray-700">Dedektör kazazedeleri uyardı.</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="dedektor" value="uyarmadi" class="checkbox-input">
+                                <span class="text-sm text-gray-700">Dedektör herhangi bir uyarı yapmadı.</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="dedektor" value="bilinmiyor" class="checkbox-input">
+                                <span class="text-sm text-gray-700">Bilinmiyor.</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fire Details -->
+            <div class="document-container rounded mb-1 p-8">
+                <div class="grid grid-cols-5 gap-6">
+                    <div>
+                        <label class="field-label block mb-2">YANGIN KAYNAĞI</label>
+                        <input type="text" id="yanginKaynagi" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="field-label block mb-2">ISITMA KAYNAĞI</label>
+                        <input type="text" id="isitmaKaynagi" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="field-label block mb-2">İLK YANAN NESNE</label>
+                        <input type="text" id="ilkYananNesne" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="field-label block mb-2">İTFAİYE KAYIPLARI</label>
+                        <input type="text" id="itfaiyeKayiplari" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="field-label block mb-2">SİVİL KAYIPLAR</label>
+                        <input type="text" id="sivilKayiplar" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Incident Notes -->
+            <div class="document-container rounded mb-1 p-8">
+                <label class="field-label block mb-3">OLAY NOTLARI VE EK BİLGİLENDİRMELER</label>
+                <textarea id="olayNotlari" class="form-input w-full px-3 py-2.5 rounded text-sm" rows="5" placeholder="Olay notları..."></textarea>
+            </div>
+
+            <!-- Signatures -->
+            <div class="document-container rounded mb-6 p-8">
+                <div class="grid grid-cols-3 gap-6">
+                    <div>
+                        <label class="field-label block mb-2">OLAY KOMUTANI</label>
+                        <input type="text" id="olayKomutani" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="field-label block mb-2">FORMU DOLDURAN</label>
+                        <input type="text" id="formuDolduran" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="field-label block mb-2">FORM TARİHİ</label>
+                        <input type="text" id="formTarihi" class="form-input w-full px-3 py-2.5 rounded text-sm">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generate Button -->
+            <button onclick="generateBBCode()" class="btn-primary w-full text-white font-semibold py-4 rounded text-sm uppercase tracking-wide">
+                BBCode Oluştur
+            </button>
+
+            <!-- Output -->
+            <div id="outputContainer" class="hidden mt-6 document-container rounded p-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-base font-semibold text-gray-900 uppercase tracking-wide">BBCode Çıktısı</h3>
+                    <button onclick="copyToClipboard()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-5 py-2.5 rounded font-medium uppercase tracking-wide transition-all">
+                        <span id="copyText">Kopyala</span>
+                    </button>
+                </div>
+                <textarea id="output" readonly class="w-full h-96 px-4 py-3 border border-gray-300 rounded bg-gray-50 font-mono text-xs leading-relaxed"></textarea>
+            </div>
+
+            <!-- Copyright -->
+            <div class="text-center mt-8 py-4">
+                <p class="text-xs text-gray-600 opacity-50">© 2025 evcleia - GTA-W:TR, Los Santos Fire Department oluşumunun kullanımı için tasarlanmıştır, tamamen IC amaçlar doğrultusunda kullanılmalıdır.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getCheckbox(name, value) {
+            const selected = document.querySelector(`input[name="${name}"]:checked`);
+            return selected && selected.value === value ? '[cbC]' : '[cb]';
+        }
+
+        function generateBBCode() {
+            const fdid = document.getElementById('fdid').value;
+            const eyalet = document.getElementById('eyalet').value;
+            const olayTarihi = document.getElementById('olayTarihi').value;
+            const olayNumarasi = document.getElementById('olayNumarasi').value;
+            const adres = document.getElementById('adres').value;
+            const olayTuru = document.getElementById('olayTuru').value;
+            const yonelenBirimler = document.getElementById('yonelenBirimler').value;
+            const gonderimZamani = document.getElementById('gonderimZamani').value;
+            const varisZamani = document.getElementById('varisZamani').value;
+            const sonlanisZamani = document.getElementById('sonlanisZamani').value;
+            const aksiyon1 = document.getElementById('aksiyon1').value;
+            const aksiyon2 = document.getElementById('aksiyon2').value;
+            const yanginKaynagi = document.getElementById('yanginKaynagi').value;
+            const isitmaKaynagi = document.getElementById('isitmaKaynagi').value;
+            const ilkYananNesne = document.getElementById('ilkYananNesne').value;
+            const itfaiyeKayiplari = document.getElementById('itfaiyeKayiplari').value;
+            const sivilKayiplar = document.getElementById('sivilKayiplar').value;
+            const olayNotlari = document.getElementById('olayNotlari').value;
+            const olayKomutani = document.getElementById('olayKomutani').value;
+            const formuDolduran = document.getElementById('formuDolduran').value;
+            const formTarihi = document.getElementById('formTarihi').value;
+
+            const bbcode = `[center][size=125]UNITED STATES FIRE ADMINISTRATION
+[b]NATIONAL FIRE INCIDENT REPORTING SYSTEM (NFIRS-1 BASIC)[/b][/size][/center]
+
+[table=#d0dade,white][tr]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]FDID[/b]
+${fdid}[/indent][/size][/tdwidth]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]EYALET[/b]
+${eyalet}[/indent][/size][/tdwidth]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]OLAY TARİHİ[/b]
+${olayTarihi}[/indent][/size][/tdwidth]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]OLAY NUMARASI[/b]
+${olayNumarasi}[/indent][/size][/tdwidth][/table]
+
+[table=#d0dade,white][tr]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]ADRES[/b]
+${adres}[/indent][/size][/tdwidth]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]OLAY TÜRÜ[/b]
+${olayTuru}[/indent][/size][/tdwidth][/table]
+
+[table=#d0dade,white][tr]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]YÖNELEN BİRİMLER[/b]
+${yonelenBirimler}[/indent][/size][/tdwidth]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]TARİH VE SAATLER[/b]
+[b]Gönderim:[/b] ${gonderimZamani}
+[b]Varış:[/b] ${varisZamani}
+[b]Sonlanış:[/b] ${sonlanisZamani}[/indent][/size][/tdwidth]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]ALINAN AKSİYONLAR[/b]
+[size=85][b](1)[/b][/size] ${aksiyon1}
+[size=85][b](2)[/b][/size] ${aksiyon2}[/indent][/size][/tdwidth]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]DEDEKTÖR[/b]
+${getCheckbox('dedektor', 'uyardi')} Dedektör kazazedeleri uyardı.
+${getCheckbox('dedektor', 'uyarmadi')} Dedektör herhangi bir uyarı yapmadı.
+${getCheckbox('dedektor', 'bilinmiyor')} Bilinmiyor.[/indent][/size][/tdwidth][/table]
+
+[table=#d0dade,white][tr]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]YANGIN KAYNAĞI[/b]
+${yanginKaynagi}[/indent][/size][/tdwidth]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]ISITMA KAYNAĞI[/b]
+${isitmaKaynagi}[/indent][/size][/tdwidth]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]İLK YANAN NESNE[/b]
+${ilkYananNesne}[/indent][/size][/tdwidth]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]İTFAİYE KAYIPLARI[/b]
+${itfaiyeKayiplari}[/indent][/size][/tdwidth]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]SİVİL KAYIPLAR[/b]
+${sivilKayiplar}[/indent][/size][/tdwidth][/table]
+
+[table=#d0dade,white][tr]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]OLAY NOTLARI VE EK BİLGİLENDİRMELER[/b]
+${olayNotlari}[/indent][/size][/tdwidth][/table]
+
+[table=#d0dade,white][tr]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]OLAY KOMUTANI[/b]
+${olayKomutani}[/indent][/size][/tdwidth]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]FORMU DOLDURAN[/b]
+${formuDolduran}[/indent][/size][/tdwidth]
+[tdwidth=#d0dade,#ffffff,top,left,2,1][size=85][indent=2][b]FORM TARİHİ[/b]
+${formTarihi}[/indent][/size][/tdwidth]`;
+
+            document.getElementById('output').value = bbcode;
+            document.getElementById('outputContainer').classList.remove('hidden');
+            document.getElementById('outputContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function copyToClipboard() {
+            const output = document.getElementById('output');
+            output.select();
+            document.execCommand('copy');
+            
+            const copyText = document.getElementById('copyText');
+            copyText.textContent = 'Kopyalama Başarılı';
+            setTimeout(() => {
+                copyText.textContent = 'Kopyala';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
