@@ -200,7 +200,6 @@
                 return true;
             } catch (error) {
                 console.error('❌ Kullanıcı verisi yüklenirken hata:', error);
-                showError('Sistem hatası. Lütfen daha sonra tekrar deneyin.');
                 return false;
             }
         }
@@ -258,6 +257,7 @@
                 const loaded = await loadUsers();
                 if (!loaded) {
                     setLoading(false);
+                    showError('Kullanıcı veritabanına erişilemiyor. Lütfen sistem yöneticinize başvurun.');
                     return;
                 }
             }
