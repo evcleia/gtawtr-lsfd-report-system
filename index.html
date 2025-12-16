@@ -194,7 +194,7 @@
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                const data = await response.json();
+                const data = await response.users.json();
                 authorizedUsers = data.users;
                 console.log('✅ Kullanıcı verisi yüklendi');
                 return true;
